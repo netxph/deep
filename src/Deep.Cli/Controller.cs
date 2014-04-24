@@ -11,7 +11,8 @@ namespace Deep.Cli
     public class Controller
     {
         const int PAD_SIZE = 3;
-        int _padding = 0;
+
+        HashSet<AssemblyRecord> _records = new HashSet<AssemblyRecord>();
 
         public void Start(string assemblyFile)
         {
@@ -25,15 +26,23 @@ namespace Deep.Cli
 
         protected virtual void DisplayAssembly(AssemblyRecord record)
         {
-            string line = string.Format("{0}{1}", record.Version.PadRight(15), record.Name);
-            Console.WriteLine(line.PadLeft(line.Length + _padding));
-
-            _padding += PAD_SIZE;
-            foreach (var reference in record.References)
+            if (_records.Add(record))
             {
-                DisplayAssembly(reference);
+                Console.WriteLine(string.Format("Assembly: {0}", record.Name));
+                Console.WriteLine("References:");
+
+                foreach (var reference in record.References)
+                {
+                    string line = string.Format("{0}{1}", reference.Version.PadRight(15), reference.Name);
+                    Console.WriteLine(line.PadLeft(line.Length + PAD_SIZE));
+                }
+
+                foreach (var reference in record.References)
+                {
+                    DisplayAssembly(reference);
+                }
+
             }
-            _padding -= PAD_SIZE;
 
         }
 

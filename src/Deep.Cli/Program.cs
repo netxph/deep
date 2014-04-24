@@ -20,8 +20,6 @@ namespace Deep.Cli
             var controller = new Controller();
             controller.Start(args[0]);
 
-            Console.ReadLine();
-
         }
     }
 }
